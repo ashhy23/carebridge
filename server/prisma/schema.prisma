@@ -1,4 +1,182 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PATIENT
+  CAREGIVER
+  FAMILY_MEMBER
+}
+
+enum ShiftStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+// Core account for patients, caregivers, and family members; drives auth and RBAC
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patientProfile   PatientProfile?
+  caregiverProfile CaregiverProfile?
+  familyLinks      FamilyLink[]
+  refreshTokens    RefreshToken[]
+}
+
+// Long-lived refresh token for JWT rotation; revoked on logout or expiry
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// Medical and emergency profile for an elderly patient (or proxy) user
+model PatientProfile {
+  id                    String    @id @default(cuid())
+  userId                String    @unique
+  dateOfBirth           DateTime?
+  bloodType             String?
+  allergies             String[]
+  emergencyContactName  String?
+  emergencyContactPhone String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vitalsEntries VitalsEntry[]
+  shifts        Shift[]
+  alerts        Alert[]
+  familyLinks   FamilyLink[]
+}
+
+// Professional caregiver credentials and metadata linked to a caregiver user
+model CaregiverProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  licenseNumber   String?
+  specializations String[]
+  bio             String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shifts Shift[]
+}
+
+// Connects a family-member user to a patient they can view (read-only dashboard)
+model FamilyLink {
+  id               String   @id @default(cuid())
+  familyUserId     String
+  patientProfileId String
+  relationship     String
+  createdAt        DateTime @default(now())
+
+  familyUser     User           @relation(fields: [familyUserId], references: [id], onDelete: Cascade)
+  patientProfile PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+
+  @@index([familyUserId])
+  @@index([patientProfileId])
+}
+
+// Point-in-time vitals reading (BP, glucose, temperature, weight) for trend charts
+model VitalsEntry {
+  id                 String   @id @default(cuid())
+  patientProfileId   String
+  systolic           Int?
+  diastolic          Int?
+  glucoseLevel       Float?
+  temperatureCelsius Float?
+  weightKg           Float?
+  notes              String?
+  recordedAt         DateTime @default(now())
+  createdAt          DateTime @default(now())
+
+  patientProfile PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+
+  @@index([patientProfileId])
+}
+
+// Scheduled or active care visit: one caregiver assigned to one patient for a time window
+model Shift {
+  id                 String      @id @default(cuid())
+  caregiverProfileId String
+  patientProfileId   String
+  startTime          DateTime
+  endTime            DateTime
+  status             ShiftStatus @default(SCHEDULED)
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  caregiverProfile CaregiverProfile @relation(fields: [caregiverProfileId], references: [id], onDelete: Cascade)
+  patientProfile   PatientProfile   @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+  tasks            Task[]
+  careNote         CareNote?
+
+  @@index([caregiverProfileId])
+  @@index([patientProfileId])
+}
+
+// Checklist item for a shift (medication, mobility, hygiene, etc.)
+model Task {
+  id          String    @id @default(cuid())
+  shiftId     String
+  description String
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  shift Shift @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+
+  @@index([shiftId])
+}
+
+// End-of-shift narrative from the caregiver, with optional AI-generated summary
+model CareNote {
+  id        String   @id @default(cuid())
+  shiftId   String   @unique
+  rawText   String
+  aiSummary String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  shift Shift @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+}
+
+// Notification for family/care team (vitals threshold, missed task, triage flag, etc.)
+model Alert {
+  id               String        @id @default(cuid())
+  patientProfileId String
+  message          String
+  severity         AlertSeverity @default(LOW)
+  isRead           Boolean       @default(false)
+  createdAt        DateTime      @default(now())
+
+  patientProfile PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+
+  @@index([patientProfileId])
 }

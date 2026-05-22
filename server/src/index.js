@@ -25,6 +25,9 @@ app.use(express.json());
 // Parse cookies from the Cookie header
 app.use(cookieParser());
 
+// Authentication routes (register, login, refresh — as implemented)
+app.use('/api/auth', require('./routes/auth'));
+
 // Simple liveness check for monitoring and local dev
 app.get('/api/health', (req, res) => {
   res.json({
