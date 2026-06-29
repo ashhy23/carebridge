@@ -41,6 +41,9 @@ app.use('/api/shifts', authenticate, require('./routes/shifts'));
 // Shift task checklists for caregivers and admins
 app.use('/api/tasks', authenticate, require('./routes/tasks'));
 
+// Vitals threshold alerts for caregivers, admins, and family members
+app.use('/api/alerts', authenticate, require('./routes/alerts'));
+
 // Simple liveness check for monitoring and local dev
 app.get('/api/health', (req, res) => {
   res.json({

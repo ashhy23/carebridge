@@ -9,6 +9,7 @@ import RegisterPage from './pages/RegisterPage';
 import VitalsPage from './pages/VitalsPage';
 import ShiftsPage from './pages/ShiftsPage';
 import ShiftDetailPage from './pages/ShiftDetailPage';
+import AlertsPage from './pages/AlertsPage';
 
 export default function App() {
   return (
@@ -46,6 +47,14 @@ export default function App() {
           element={
             <PrivateRoute>
               <ShiftDetailPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/alerts"
+          element={
+            <PrivateRoute>
+              <AlertsPage />
             </PrivateRoute>
           }
         />

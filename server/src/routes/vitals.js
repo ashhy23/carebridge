@@ -4,6 +4,56 @@ const { authenticate, requireRole } = require('../middleware/auth');
 
 const router = express.Router();
 
+function buildVitalsAlerts(vitals, patientProfileId) {
+  const alerts = [];
+  const { heartRate, systolic, diastolic, bloodOxygen, temperatureCelsius } = vitals;
+
+  if (heartRate != null && (heartRate < 50 || heartRate > 100)) {
+    const direction = heartRate < 50 ? 'below' : 'above';
+    alerts.push({
+      patientProfileId,
+      type: 'ABNORMAL_HEART_RATE',
+      message: `Heart rate of ${heartRate} bpm is ${direction} the normal range (50–100).`,
+    });
+  }
+
+  const systolicAbnormal = systolic != null && (systolic < 90 || systolic > 140);
+  const diastolicAbnormal = diastolic != null && (diastolic < 60 || diastolic > 90);
+  if (systolicAbnormal || diastolicAbnormal) {
+    alerts.push({
+      patientProfileId,
+      type: 'ABNORMAL_BLOOD_PRESSURE',
+      message: `Blood pressure of ${systolic ?? '—'}/${diastolic ?? '—'} mmHg is outside normal range.`,
+    });
+  }
+
+  if (bloodOxygen != null && bloodOxygen < 95) {
+    alerts.push({
+      patientProfileId,
+      type: 'LOW_BLOOD_OXYGEN',
+      message: `Blood oxygen (SpO2) of ${bloodOxygen}% is below the safe threshold (95%).`,
+    });
+  }
+
+  if (temperatureCelsius != null && (temperatureCelsius < 36.0 || temperatureCelsius > 37.5)) {
+    const direction = temperatureCelsius < 36.0 ? 'below' : 'above';
+    alerts.push({
+      patientProfileId,
+      type: 'ABNORMAL_TEMPERATURE',
+      message: `Temperature of ${temperatureCelsius}°C is ${direction} the normal range (36.0–37.5°C).`,
+    });
+  }
+
+  return alerts;
+}
+
+async function createVitalsAlerts(vitals, patientProfileId) {
+  const alerts = buildVitalsAlerts(vitals, patientProfileId);
+  if (alerts.length === 0) return;
+
+  await prisma.alert.createMany({ data: alerts });
+}
+
 async function canAccessPatientProfile(userId, role, patientProfileId) {
   if (role === 'PATIENT') {
     const profile = await prisma.patientProfile.findUnique({ where: { userId } });
@@ -68,7 +118,14 @@ router.post('/', authenticate, requireRole('PATIENT'), async (req, res) => {
     },
   });
 
-  // 5. Return the created entry with 201 Created
+  // 5. Auto-generate alerts for abnormal readings (non-blocking for the response)
+  try {
+    await createVitalsAlerts(entry, patientProfile.id);
+  } catch (err) {
+    console.error('Failed to create vitals alerts:', err);
+  }
+
+  // 6. Return the created entry with 201 Created
   return res.status(201).json(entry);
 });
 

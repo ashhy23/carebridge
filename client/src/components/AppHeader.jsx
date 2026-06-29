@@ -1,7 +1,9 @@
 /**
  * Shared top navigation for authenticated pages.
  */
+import { useQuery } from '@tanstack/react-query';
 import { NavLink, useNavigate } from 'react-router-dom';
+import api from '../lib/api';
 import { useAuth } from '../lib/useAuth';
 
 const NAV_LINK_CLASS = ({ isActive }) =>
@@ -15,6 +17,21 @@ export default function AppHeader() {
   const navigate = useNavigate();
 
   const canViewShifts = user?.role === 'CAREGIVER' || user?.role === 'ADMIN';
+  const canViewAlerts =
+    user?.role === 'CAREGIVER' || user?.role === 'ADMIN' || user?.role === 'FAMILY_MEMBER';
+
+  const { data: unreadData } = useQuery({
+    queryKey: ['alerts-unread-count'],
+    queryFn: async () => {
+      const { data } = await api.get('/alerts/unread-count');
+      return data;
+    },
+    enabled: canViewAlerts,
+    refetchInterval: 30000,
+  });
+
+  const unreadCount = unreadData?.count ?? 0;
+  const badgeLabel = unreadCount > 9 ? '9+' : String(unreadCount);
 
   async function handleLogout() {
     await logout();
@@ -36,6 +53,18 @@ export default function AppHeader() {
             {canViewShifts && (
               <NavLink to="/shifts" className={NAV_LINK_CLASS}>
                 Shifts
+              </NavLink>
+            )}
+            {canViewAlerts && (
+              <NavLink to="/alerts" className={NAV_LINK_CLASS}>
+                <span className="relative inline-flex items-center">
+                  Alerts
+                  {unreadCount > 0 && (
+                    <span className="absolute -right-3 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-500 px-1 text-xs font-medium text-white">
+                      {badgeLabel}
+                    </span>
+                  )}
+                </span>
               </NavLink>
             )}
           </nav>

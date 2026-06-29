@@ -175,6 +175,7 @@ model CareNote {
 model Alert {
   id               String        @id @default(cuid())
   patientProfileId String
+  type             String
   message          String
   severity         AlertSeverity @default(LOW)
   isRead           Boolean       @default(false)
