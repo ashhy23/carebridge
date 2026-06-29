@@ -31,6 +31,9 @@ app.use('/api/auth', require('./routes/auth'));
 // Vitals logging and history for patients, caregivers, and family members
 app.use('/api/vitals', require('./routes/vitals'));
 
+// Linked patients for caregivers and family members (vitals picker, dashboards)
+app.use('/api/patients', require('./routes/patients'));
+
 // Simple liveness check for monitoring and local dev
 app.get('/api/health', (req, res) => {
   res.json({

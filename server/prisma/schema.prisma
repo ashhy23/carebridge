@@ -103,12 +103,14 @@ model FamilyLink {
   @@index([patientProfileId])
 }
 
-// Point-in-time vitals reading (BP, glucose, temperature, weight) for trend charts
+// Point-in-time vitals reading (BP, heart rate, SpO2, temperature, weight) for trend charts
 model VitalsEntry {
   id                 String   @id @default(cuid())
   patientProfileId   String
+  heartRate          Int?
   systolic           Int?
   diastolic          Int?
+  bloodOxygen        Float?
   glucoseLevel       Float?
   temperatureCelsius Float?
   weightKg           Float?

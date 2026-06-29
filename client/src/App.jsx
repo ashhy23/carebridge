@@ -6,6 +6,7 @@ import PrivateRoute from './components/PrivateRoute';
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import VitalsPage from './pages/VitalsPage';
 
 export default function App() {
   return (
@@ -19,6 +20,14 @@ export default function App() {
           element={
             <PrivateRoute>
               <DashboardPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/vitals"
+          element={
+            <PrivateRoute>
+              <VitalsPage />
             </PrivateRoute>
           }
         />

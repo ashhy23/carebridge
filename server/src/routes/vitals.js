@@ -4,10 +4,44 @@ const { authenticate, requireRole } = require('../middleware/auth');
 
 const router = express.Router();
 
+async function canAccessPatientProfile(userId, role, patientProfileId) {
+  if (role === 'PATIENT') {
+    const profile = await prisma.patientProfile.findUnique({ where: { userId } });
+    return profile?.id === patientProfileId;
+  }
+
+  if (role === 'FAMILY_MEMBER') {
+    const link = await prisma.familyLink.findFirst({
+      where: { familyUserId: userId, patientProfileId },
+    });
+    return Boolean(link);
+  }
+
+  if (role === 'CAREGIVER') {
+    const caregiverProfile = await prisma.caregiverProfile.findUnique({ where: { userId } });
+    if (!caregiverProfile) return false;
+
+    const shift = await prisma.shift.findFirst({
+      where: { caregiverProfileId: caregiverProfile.id, patientProfileId },
+    });
+    return Boolean(shift);
+  }
+
+  return false;
+}
+
 router.post('/', authenticate, requireRole('PATIENT'), async (req, res) => {
   // 1. Read optional vitals fields from the request body
-  const { systolic, diastolic, glucoseLevel, temperatureCelsius, weightKg, notes } =
-    req.body;
+  const {
+    heartRate,
+    systolic,
+    diastolic,
+    bloodOxygen,
+    glucoseLevel,
+    temperatureCelsius,
+    weightKg,
+    notes,
+  } = req.body;
 
   // 2. Look up the authenticated patient's profile by their user id
   const patientProfile = await prisma.patientProfile.findUnique({
@@ -23,8 +57,10 @@ router.post('/', authenticate, requireRole('PATIENT'), async (req, res) => {
   const entry = await prisma.vitalsEntry.create({
     data: {
       patientProfileId: patientProfile.id,
+      heartRate,
       systolic,
       diastolic,
+      bloodOxygen,
       glucoseLevel,
       temperatureCelsius,
       weightKg,
@@ -61,19 +97,25 @@ router.get('/', authenticate, async (req, res) => {
     if (!patientProfileId) {
       return res.status(400).json({ error: 'patientProfileId query parameter is required' });
     }
+
+    // 5. Ensure the user is allowed to view this patient's vitals
+    const allowed = await canAccessPatientProfile(userId, role, patientProfileId);
+    if (!allowed) {
+      return res.status(403).json({ error: 'Forbidden: no access to this patient' });
+    }
   } else {
-    // 5. Deny access for any other role
+    // 6. Deny access for any other role
     return res.status(403).json({ error: 'Forbidden: insufficient permissions' });
   }
 
-  // 6. Fetch the 30 most recent vitals entries for the resolved patient profile
+  // 7. Fetch the 30 most recent vitals entries for the resolved patient profile
   const entries = await prisma.vitalsEntry.findMany({
     where: { patientProfileId },
     orderBy: { recordedAt: 'desc' },
     take: 30,
   });
 
-  // 7. Return the vitals history array with 200 OK
+  // 8. Return the vitals history array with 200 OK
   return res.status(200).json(entries);
 });
 
