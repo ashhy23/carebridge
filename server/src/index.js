@@ -34,6 +34,10 @@ app.use('/api/vitals', require('./routes/vitals'));
 // Linked patients for caregivers and family members (vitals picker, dashboards)
 app.use('/api/patients', require('./routes/patients'));
 
+// Shift scheduling and status updates for admins and caregivers
+const { authenticate } = require('./middleware/auth');
+app.use('/api/shifts', authenticate, require('./routes/shifts'));
+
 // Simple liveness check for monitoring and local dev
 app.get('/api/health', (req, res) => {
   res.json({
