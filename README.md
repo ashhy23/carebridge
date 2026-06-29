@@ -13,8 +13,6 @@
 
 CareBridge is a full-stack web application that helps families, caregivers, and care coordinators stay on top of an elderly patient's health in one place. Patients log daily vitals; the platform tracks trends, flags abnormal readings automatically, and keeps the care team aligned through shifts, task checklists, and shift notes.
 
-It was built by **Ashitha** as a placement portfolio project — designed to demonstrate real-world full-stack skills: secure authentication, role-based access control, relational data modelling, and a polished React frontend backed by a REST API.
-
 ---
 
 ## Features
@@ -268,5 +266,3 @@ For production deployments (Phase 4), you may introduce a `VITE_API_URL` variabl
 ## Author
 
 Built by **Ashitha** as a placement portfolio project.
-
-If you have questions or feedback, feel free to open an issue on GitHub.
