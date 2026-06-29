@@ -28,6 +28,9 @@ app.use(cookieParser());
 // Authentication routes (register, login, refresh — as implemented)
 app.use('/api/auth', require('./routes/auth'));
 
+// Vitals logging and history for patients, caregivers, and family members
+app.use('/api/vitals', require('./routes/vitals'));
+
 // Simple liveness check for monitoring and local dev
 app.get('/api/health', (req, res) => {
   res.json({
