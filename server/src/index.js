@@ -38,6 +38,9 @@ app.use('/api/patients', require('./routes/patients'));
 const { authenticate } = require('./middleware/auth');
 app.use('/api/shifts', authenticate, require('./routes/shifts'));
 
+// Shift task checklists for caregivers and admins
+app.use('/api/tasks', authenticate, require('./routes/tasks'));
+
 // Simple liveness check for monitoring and local dev
 app.get('/api/health', (req, res) => {
   res.json({

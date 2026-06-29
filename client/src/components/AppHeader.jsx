@@ -11,8 +11,10 @@ const NAV_LINK_CLASS = ({ isActive }) =>
   ].join(' ');
 
 export default function AppHeader() {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
+
+  const canViewShifts = user?.role === 'CAREGIVER' || user?.role === 'ADMIN';
 
   async function handleLogout() {
     await logout();
@@ -31,6 +33,11 @@ export default function AppHeader() {
             <NavLink to="/vitals" className={NAV_LINK_CLASS}>
               Vitals
             </NavLink>
+            {canViewShifts && (
+              <NavLink to="/shifts" className={NAV_LINK_CLASS}>
+                Shifts
+              </NavLink>
+            )}
           </nav>
         </div>
         <button

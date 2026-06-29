@@ -146,12 +146,13 @@ model Shift {
 
 // Checklist item for a shift (medication, mobility, hygiene, etc.)
 model Task {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   shiftId     String
-  description String
-  isCompleted Boolean   @default(false)
-  completedAt DateTime?
-  createdAt   DateTime  @default(now())
+  title       String
+  description String?
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   shift Shift @relation(fields: [shiftId], references: [id], onDelete: Cascade)
 

@@ -7,6 +7,8 @@ import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import VitalsPage from './pages/VitalsPage';
+import ShiftsPage from './pages/ShiftsPage';
+import ShiftDetailPage from './pages/ShiftDetailPage';
 
 export default function App() {
   return (
@@ -28,6 +30,22 @@ export default function App() {
           element={
             <PrivateRoute>
               <VitalsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/shifts"
+          element={
+            <PrivateRoute>
+              <ShiftsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/shifts/:id"
+          element={
+            <PrivateRoute>
+              <ShiftDetailPage />
             </PrivateRoute>
           }
         />

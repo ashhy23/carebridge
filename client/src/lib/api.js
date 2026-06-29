@@ -28,6 +28,19 @@ const api = axios.create({
   withCredentials: true,
 });
 
+function isPublicAuthRoute() {
+  const path = window.location.pathname;
+  return path === '/login' || path === '/register';
+}
+
+function isAuthEndpointWithoutRefresh(url = '') {
+  return (
+    url.includes('/auth/refresh') ||
+    url.includes('/auth/login') ||
+    url.includes('/auth/register')
+  );
+}
+
 // Attach Bearer token to every request when we have one
 api.interceptors.request.use((config) => {
   if (accessToken) {
@@ -46,11 +59,12 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // Do not retry refresh itself — avoid infinite loop
-    if (originalRequest.url?.includes('/auth/refresh')) {
-      setAccessToken(null);
-      onAccessTokenChange?.(null);
-      window.location.href = '/login';
+    // Login/register failures and session restore are not expired access tokens
+    if (isAuthEndpointWithoutRefresh(originalRequest.url)) {
+      if (originalRequest.url?.includes('/auth/refresh')) {
+        setAccessToken(null);
+        onAccessTokenChange?.(null);
+      }
       return Promise.reject(error);
     }
 
@@ -66,7 +80,9 @@ api.interceptors.response.use(
     } catch (refreshError) {
       setAccessToken(null);
       onAccessTokenChange?.(null);
-      window.location.href = '/login';
+      if (!isPublicAuthRoute()) {
+        window.location.href = '/login';
+      }
       return Promise.reject(refreshError);
     }
   }
