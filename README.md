@@ -7,6 +7,8 @@
 ![Phase 3](https://img.shields.io/badge/Phase%203-🔄%20In%20Progress-f59e0b?style=flat-square)
 ![Phase 4](https://img.shields.io/badge/Phase%204-📋%20Planned-6366f1?style=flat-square)
 
+[![CI](https://github.com/ashhy23/carebridge/actions/workflows/ci.yml/badge.svg)](https://github.com/ashhy23/carebridge/actions/workflows/ci.yml)
+
 ---
 
 ## About
