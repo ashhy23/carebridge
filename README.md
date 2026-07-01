@@ -54,8 +54,8 @@ CareBridge is a full-stack web application that helps families, caregivers, and 
 | **Backend** | Node.js, Express, Prisma ORM v5 |
 | **Database** | PostgreSQL on Supabase |
 | **Auth** | JWT (15 min access token + 7 day refresh token in httpOnly cookie) |
-| **AI** *(coming)* | Claude API + Whisper (Phase 3) |
-| **DevOps** *(coming)* | Docker + GitHub Actions (Phase 4) |
+| **AI** | Claude API + Whisper (Phase 3) |
+| **DevOps** | Docker + GitHub Actions (Phase 4) |
 
 ---
 
