@@ -1,0 +1,27 @@
+services:
+  server:
+    build:
+      context: ./server
+      args:
+        DATABASE_URL: ${DATABASE_URL:-postgresql://placeholder:placeholder@localhost:5432/placeholder}
+    container_name: carebridge-server
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./server/.env
+    environment:
+      NODE_ENV: production
+      PORT: 5001
+    restart: unless-stopped
+
+  client:
+    build:
+      context: ./client
+      args:
+        VITE_API_URL: http://localhost:5001/api
+    container_name: carebridge-client
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    restart: unless-stopped

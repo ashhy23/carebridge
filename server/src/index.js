@@ -14,7 +14,11 @@ const app = express();
 // Allow the React dev server to send credentialed requests (cookies, auth headers)
 app.use(
   cors({
-    origin: 'http://localhost:5174',
+    origin: [
+      'http://localhost:5174',
+      'http://localhost',
+      'http://localhost:80',
+    ],
     credentials: true,
   })
 );
