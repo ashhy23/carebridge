@@ -1,6 +1,14 @@
 const express = require('express');
+const multer = require('multer');
+const OpenAI = require('openai');
+const { Readable } = require('stream');
 const prisma = require('../lib/prisma');
 const { requireRole } = require('../middleware/auth');
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 25 * 1024 * 1024 },
+});
 
 const router = express.Router();
 
@@ -148,5 +156,33 @@ router.post('/care-summary', requireRole('CAREGIVER'), async (req, res) => {
     return res.status(500).json({ error: 'Failed to generate summary' });
   }
 });
+
+router.post(
+  '/transcribe',
+  requireRole('CAREGIVER'),
+  upload.single('audio'),
+  async (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No audio file provided' });
+    }
+
+    try {
+      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+      const stream = Readable.from(req.file.buffer);
+      stream.path = 'audio.webm';
+
+      const transcription = await openai.audio.transcriptions.create({
+        file: stream,
+        model: 'whisper-1',
+      });
+
+      return res.status(200).json({ transcript: transcription.text });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Transcription failed' });
+    }
+  }
+);
 
 module.exports = router;

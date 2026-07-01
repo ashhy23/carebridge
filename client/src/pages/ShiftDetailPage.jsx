@@ -4,6 +4,7 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import AppHeader from '../components/AppHeader';
 import StatusBadge from '../components/shifts/StatusBadge';
 import TaskList from '../components/shifts/TaskList';
+import VoiceRecorder from '../components/shifts/VoiceRecorder';
 import api from '../lib/api';
 import { useAuth } from '../lib/useAuth';
 import { formatShiftTimeRange, getPatientName } from '../lib/shiftsUtils';
@@ -81,6 +82,10 @@ export default function ShiftDetailPage() {
   function handleSaveNotes(e) {
     e.preventDefault();
     notesMutation.mutate(notes);
+  }
+
+  function handleTranscript(text) {
+    setNotes((prev) => (prev.trim() ? `${prev}\n${text}` : text));
   }
 
   const canUpdateStatus = user.role === 'CAREGIVER';
@@ -168,6 +173,11 @@ export default function ShiftDetailPage() {
               )}
 
               <form onSubmit={handleSaveNotes} className="mt-4 space-y-4">
+                {user.role === 'CAREGIVER' &&
+                  shift.status !== 'COMPLETED' &&
+                  shift.status !== 'CANCELLED' && (
+                    <VoiceRecorder onTranscript={handleTranscript} />
+                  )}
                 <textarea
                   rows={5}
                   value={notes}
