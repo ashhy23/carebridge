@@ -4,8 +4,8 @@
 
 ![Phase 1](https://img.shields.io/badge/Phase%201-✅%20Complete-22c55e?style=flat-square)
 ![Phase 2](https://img.shields.io/badge/Phase%202-✅%20Complete-22c55e?style=flat-square)
-![Phase 3](https://img.shields.io/badge/Phase%203-🔄%20In%20Progress-f59e0b?style=flat-square)
-![Phase 4](https://img.shields.io/badge/Phase%204-📋%20Planned-6366f1?style=flat-square)
+![Phase 3](https://img.shields.io/badge/Phase%203-✅%20Complete-22c55e?style=flat-square)
+![Phase 4](https://img.shields.io/badge/Phase%204-✅%20Complete-22c55e?style=flat-square)
 
 [![CI](https://github.com/ashhy23/carebridge/actions/workflows/ci.yml/badge.svg)](https://github.com/ashhy23/carebridge/actions/workflows/ci.yml)
 
@@ -251,8 +251,8 @@ For production deployments (Phase 4), you may introduce a `VITE_API_URL` variabl
 |-------|--------|-------|
 | **Phase 1 — Auth & Foundation** | ✅ Complete | Monorepo, Prisma schema (10 models), JWT auth, RBAC middleware, React auth UI, Axios interceptor, PrivateRoute |
 | **Phase 2 — Core Care Features** | ✅ Complete | Vitals logging & charts, auto-alerts, shift management, task checklists, care notes, alert badge polling, full RBAC |
-| **Phase 3 — AI Features** | 🔄 In Progress | Claude API care summaries, Whisper voice note transcription |
-| **Phase 4 — DevOps** | 📋 Planned | Docker containerisation, GitHub Actions CI/CD pipeline |
+| **Phase 3 — AI Features** | ✅ Complete | Claude API care summaries, Whisper voice note transcription |
+| **Phase 4 — DevOps** | ✅ Complete | Docker containerisation, GitHub Actions CI/CD pipeline |
 
 ### Technical highlights
 
