@@ -59,6 +59,13 @@ export default function ShiftDetailPage() {
     },
   });
 
+  const summaryMutation = useMutation({
+    mutationFn: async () => {
+      const { data } = await api.post('/ai/care-summary', { shiftId: id });
+      return data.summary;
+    },
+  });
+
   if (!canViewShifts) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -186,6 +193,37 @@ export default function ShiftDetailPage() {
               <p className="mt-1 text-sm text-gray-500">Checklist items for this shift.</p>
               <TaskList shiftId={id} shiftStatus={shift.status} userRole={user.role} />
             </div>
+
+            {user.role === 'CAREGIVER' && shift.status === 'COMPLETED' && (
+              <div className="rounded-xl bg-white p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900">AI Care Summary</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Auto-generated summary based on notes, tasks and recent vitals.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => summaryMutation.mutate()}
+                  disabled={summaryMutation.isPending}
+                  className="mt-4 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {summaryMutation.isPending ? 'Generating...' : 'Generate Summary'}
+                </button>
+
+                {summaryMutation.isError && (
+                  <p className="mt-4 text-sm text-red-700">
+                    {summaryMutation.error?.response?.data?.error ||
+                      'Failed to generate summary. Please try again.'}
+                  </p>
+                )}
+
+                {summaryMutation.data && (
+                  <div className="mt-4 rounded-xl bg-blue-50 p-4 text-sm leading-relaxed text-gray-800">
+                    {summaryMutation.data}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
       </main>

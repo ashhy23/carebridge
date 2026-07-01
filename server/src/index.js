@@ -44,6 +44,9 @@ app.use('/api/tasks', authenticate, require('./routes/tasks'));
 // Vitals threshold alerts for caregivers, admins, and family members
 app.use('/api/alerts', authenticate, require('./routes/alerts'));
 
+// AI-generated care summaries for caregivers
+app.use('/api/ai', authenticate, require('./routes/ai'));
+
 // Simple liveness check for monitoring and local dev
 app.get('/api/health', (req, res) => {
   res.json({
