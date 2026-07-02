@@ -26,9 +26,9 @@ const FIELD_RULES = {
 };
 
 const INPUT_CLASS =
-  'w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
+  'w-full rounded-xl border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.05)] px-3 py-2 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20';
 const INPUT_ERROR_CLASS =
-  'w-full rounded-lg border border-red-500 px-3 py-2 text-gray-900 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500';
+  'w-full rounded-xl border border-red-500 bg-[rgba(255,255,255,0.05)] px-3 py-2 text-white placeholder-gray-500 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20';
 
 function validateField(name, value) {
   if (value === '') return '';
@@ -125,26 +125,24 @@ export default function VitalsForm() {
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-gray-900">Log Vitals</h3>
-      <p className="mt-1 text-sm text-gray-500">
+    <div className="rounded-2xl border border-cb-border bg-cb-card p-6">
+      <h3 className="text-lg font-semibold text-white">Log Vitals</h3>
+      <p className="mt-1 text-sm text-gray-400">
         Record today&apos;s readings. All fields are optional — log only what you measured.
       </p>
 
       {successMessage && (
-        <p className="mt-4 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
-          {successMessage}
-        </p>
+        <p className="mt-4 text-sm text-cb-lime">{successMessage}</p>
       )}
 
       {errors.form && (
-        <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{errors.form}</p>
+        <p className="mt-4 text-sm text-red-400">{errors.form}</p>
       )}
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="heartRate" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="heartRate" className="mb-1 block text-sm text-gray-300">
               Heart Rate (bpm)
             </label>
             <input
@@ -159,12 +157,12 @@ export default function VitalsForm() {
               placeholder="e.g. 72"
             />
             {errors.heartRate && (
-              <p className="mt-1 text-sm text-red-600">{errors.heartRate}</p>
+              <p className="mt-1 text-sm text-red-400">{errors.heartRate}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="systolicBp" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="systolicBp" className="mb-1 block text-sm text-gray-300">
               Systolic BP (mmHg)
             </label>
             <input
@@ -179,12 +177,12 @@ export default function VitalsForm() {
               placeholder="e.g. 120"
             />
             {errors.systolicBp && (
-              <p className="mt-1 text-sm text-red-600">{errors.systolicBp}</p>
+              <p className="mt-1 text-sm text-red-400">{errors.systolicBp}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="diastolicBp" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="diastolicBp" className="mb-1 block text-sm text-gray-300">
               Diastolic BP (mmHg)
             </label>
             <input
@@ -199,12 +197,12 @@ export default function VitalsForm() {
               placeholder="e.g. 80"
             />
             {errors.diastolicBp && (
-              <p className="mt-1 text-sm text-red-600">{errors.diastolicBp}</p>
+              <p className="mt-1 text-sm text-red-400">{errors.diastolicBp}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="bloodOxygen" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="bloodOxygen" className="mb-1 block text-sm text-gray-300">
               Blood Oxygen / SpO2 (%)
             </label>
             <input
@@ -219,12 +217,12 @@ export default function VitalsForm() {
               placeholder="e.g. 98"
             />
             {errors.bloodOxygen && (
-              <p className="mt-1 text-sm text-red-600">{errors.bloodOxygen}</p>
+              <p className="mt-1 text-sm text-red-400">{errors.bloodOxygen}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="temperature" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="temperature" className="mb-1 block text-sm text-gray-300">
               Temperature (°C)
             </label>
             <input
@@ -240,13 +238,13 @@ export default function VitalsForm() {
               placeholder="e.g. 36.6"
             />
             {errors.temperature && (
-              <p className="mt-1 text-sm text-red-600">{errors.temperature}</p>
+              <p className="mt-1 text-sm text-red-400">{errors.temperature}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="weight" className="mb-1 block text-sm font-medium text-gray-700">
-              Weight (kg) <span className="text-gray-400">optional</span>
+            <label htmlFor="weight" className="mb-1 block text-sm text-gray-300">
+              Weight (kg) <span className="text-gray-500">optional</span>
             </label>
             <input
               id="weight"
@@ -259,13 +257,13 @@ export default function VitalsForm() {
               className={fieldClass('weight')}
               placeholder="e.g. 68.5"
             />
-            {errors.weight && <p className="mt-1 text-sm text-red-600">{errors.weight}</p>}
+            {errors.weight && <p className="mt-1 text-sm text-red-400">{errors.weight}</p>}
           </div>
         </div>
 
         <div>
-          <label htmlFor="notes" className="mb-1 block text-sm font-medium text-gray-700">
-            Notes <span className="text-gray-400">optional</span>
+          <label htmlFor="notes" className="mb-1 block text-sm text-gray-300">
+            Notes <span className="text-gray-500">optional</span>
           </label>
           <textarea
             id="notes"
@@ -278,18 +276,18 @@ export default function VitalsForm() {
           />
           <div className="mt-1 flex justify-between">
             {errors.notes ? (
-              <p className="text-sm text-red-600">{errors.notes}</p>
+              <p className="text-sm text-red-400">{errors.notes}</p>
             ) : (
               <span />
             )}
-            <p className="text-xs text-gray-400">{form.notes.length}/500</p>
+            <p className="text-xs text-gray-500">{form.notes.length}/500</p>
           </div>
         </div>
 
         <button
           type="submit"
           disabled={mutation.isPending}
-          className="w-full rounded-lg bg-blue-600 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-xl bg-blue-600 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {mutation.isPending ? 'Saving...' : 'Log Vitals'}
         </button>

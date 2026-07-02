@@ -5,6 +5,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import api from '../../lib/api';
 
+const SELECT_CLASS =
+  'w-full rounded-xl border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.05)] px-3 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20';
+
 export default function PatientProfilePicker() {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedId = searchParams.get('patientProfileId') ?? '';
@@ -27,9 +30,9 @@ export default function PatientProfilePicker() {
   }
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-gray-900">Select patient</h3>
-      <p className="mt-1 text-sm text-gray-500">
+    <div className="rounded-2xl border border-cb-border bg-cb-card p-6">
+      <h3 className="text-lg font-semibold text-white">Select patient</h3>
+      <p className="mt-1 text-sm text-gray-400">
         Choose a linked patient to view their vitals history.
       </p>
 
@@ -38,13 +41,13 @@ export default function PatientProfilePicker() {
       )}
 
       {isError && (
-        <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="mt-4 text-sm text-red-400">
           {error.response?.data?.error || 'Failed to load linked patients.'}
         </p>
       )}
 
       {!isLoading && !isError && patients.length === 0 && (
-        <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
+        <p className="mt-4 text-sm text-gray-500">
           No linked patients found. Family links or care shifts must be set up in the
           database first.
         </p>
@@ -52,18 +55,20 @@ export default function PatientProfilePicker() {
 
       {!isLoading && patients.length > 0 && (
         <div className="mt-4">
-          <label htmlFor="patientSelect" className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="patientSelect" className="mb-1 block text-sm text-gray-300">
             Patient
           </label>
           <select
             id="patientSelect"
             value={selectedId}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className={SELECT_CLASS}
           >
-            <option value="">Select a patient...</option>
+            <option value="" className="bg-cb-card text-white">
+              Select a patient...
+            </option>
             {patients.map((patient) => (
-              <option key={patient.id} value={patient.id}>
+              <option key={patient.id} value={patient.id} className="bg-cb-card text-white">
                 {patient.name}
                 {patient.relationship ? ` (${patient.relationship})` : ''}
               </option>

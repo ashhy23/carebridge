@@ -1,8 +1,8 @@
 const STATUS_STYLES = {
-  SCHEDULED: 'bg-blue-100 text-blue-800',
-  IN_PROGRESS: 'bg-amber-100 text-amber-800',
-  COMPLETED: 'bg-green-100 text-green-800',
-  CANCELLED: 'bg-gray-100 text-gray-600',
+  SCHEDULED: 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+  IN_PROGRESS: 'bg-amber-500/20 text-amber-400 border border-amber-500/30',
+  COMPLETED: 'bg-green-500/20 text-green-400 border border-green-500/30',
+  CANCELLED: 'bg-gray-500/20 text-gray-400 border border-gray-500/30',
 };
 
 const STATUS_LABELS = {
@@ -13,7 +13,7 @@ const STATUS_LABELS = {
 };
 
 export function getStatusStyle(status) {
-  return STATUS_STYLES[status] || 'bg-gray-100 text-gray-600';
+  return STATUS_STYLES[status] || 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
 }
 
 export function getStatusLabel(status) {

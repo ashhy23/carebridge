@@ -76,16 +76,16 @@ export default function VoiceRecorder({ onTranscript }) {
 
   let buttonLabel = '🎤 Record Voice Note';
   let buttonClass =
-    'rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-blue-400';
+    'rounded-xl border border-cb-border px-4 py-2 text-sm font-medium text-gray-300 transition hover:border-blue-500';
 
   if (isRecording) {
     buttonLabel = '🔴 Recording... (tap to stop)';
     buttonClass =
-      'rounded-lg border border-red-500 bg-red-50 px-4 py-2 text-sm font-medium text-red-600 animate-pulse';
+      'rounded-xl border border-red-500 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-400 animate-pulse';
   } else if (isTranscribing) {
     buttonLabel = 'Transcribing...';
     buttonClass =
-      'rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed';
+      'rounded-xl border border-cb-border px-4 py-2 text-sm font-medium text-gray-500 cursor-not-allowed';
   }
 
   return (
@@ -99,7 +99,7 @@ export default function VoiceRecorder({ onTranscript }) {
         {buttonLabel}
       </button>
 
-      {error && <p className="text-sm text-red-700">{error}</p>}
+      {error && <p className="text-sm text-red-400">{error}</p>}
     </div>
   );
 }

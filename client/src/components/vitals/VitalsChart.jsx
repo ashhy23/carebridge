@@ -30,9 +30,9 @@ function CustomTooltip({ active, payload, label }) {
   const point = payload[0]?.payload;
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-3 text-sm shadow-md">
-      <p className="mb-2 font-medium text-gray-900">{label}</p>
-      <ul className="space-y-1 text-gray-700">
+    <div className="rounded-lg border border-cb-border bg-cb-card p-3 text-sm shadow-md">
+      <p className="mb-2 font-medium text-white">{label}</p>
+      <ul className="space-y-1 text-gray-300">
         {METRIC_LINES.map(({ key, name, unit }) => (
           <li key={key}>
             {name}: {point[key] != null ? `${point[key]} ${unit}` : '—'}
@@ -50,9 +50,9 @@ function SecondaryTooltip({ active, payload, label, unit }) {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-3 text-sm shadow-md">
-      <p className="font-medium text-gray-900">{label}</p>
-      <p className="text-gray-700">
+    <div className="rounded-lg border border-cb-border bg-cb-card p-3 text-sm shadow-md">
+      <p className="font-medium text-white">{label}</p>
+      <p className="text-gray-300">
         {payload[0].value != null ? `${payload[0].value} ${unit}` : '—'}
       </p>
     </div>
@@ -86,9 +86,9 @@ export default function VitalsChart({ className = '' }) {
   const hasData = chartData.length > 0;
 
   return (
-    <div className={`rounded-xl bg-white p-6 shadow-sm ${className}`}>
-      <h3 className="text-lg font-semibold text-gray-900">30-Day Vitals Trends</h3>
-      <p className="mt-1 text-sm text-gray-500">Recent readings over time (up to 30 entries).</p>
+    <div className={`rounded-2xl border border-cb-border bg-cb-card p-6 ${className}`}>
+      <h3 className="text-lg font-semibold text-white">30-Day Vitals Trends</h3>
+      <p className="mt-1 text-sm text-gray-400">Recent readings over time (up to 30 entries).</p>
 
       {!isPatient && !patientProfileId && (
         <p className="mt-6 text-center text-sm text-gray-500">
@@ -101,7 +101,7 @@ export default function VitalsChart({ className = '' }) {
       )}
 
       {isError && (
-        <p className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+        <p className="mt-6 text-sm text-red-400">
           {error.response?.data?.error || 'Failed to load vitals.'}
         </p>
       )}
@@ -119,11 +119,11 @@ export default function VitalsChart({ className = '' }) {
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                <XAxis dataKey="dateLabel" tick={{ fontSize: 12 }} stroke="#6B7280" />
-                <YAxis tick={{ fontSize: 12 }} stroke="#6B7280" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="dateLabel" tick={{ fontSize: 12, fill: '#6b7280' }} stroke="#6b7280" />
+                <YAxis tick={{ fontSize: 12, fill: '#6b7280' }} stroke="#6b7280" />
                 <Tooltip content={<CustomTooltip />} />
-                <Legend />
+                <Legend wrapperStyle={{ color: '#9ca3af' }} />
                 {METRIC_LINES.map(({ key, name, color }) => (
                   <Line
                     key={key}
@@ -142,13 +142,13 @@ export default function VitalsChart({ className = '' }) {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
-              <h4 className="mb-2 text-sm font-medium text-gray-700">Temperature (°C)</h4>
+              <h4 className="mb-2 text-sm font-medium text-white">Temperature (°C)</h4>
               <div className="h-40 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                    <XAxis dataKey="dateLabel" tick={{ fontSize: 11 }} stroke="#6B7280" />
-                    <YAxis domain={['auto', 'auto']} tick={{ fontSize: 11 }} stroke="#6B7280" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                    <XAxis dataKey="dateLabel" tick={{ fontSize: 11, fill: '#6b7280' }} stroke="#6b7280" />
+                    <YAxis domain={['auto', 'auto']} tick={{ fontSize: 11, fill: '#6b7280' }} stroke="#6b7280" />
                     <Tooltip content={<SecondaryTooltip unit="°C" />} />
                     <Line
                       type="monotone"
@@ -165,13 +165,13 @@ export default function VitalsChart({ className = '' }) {
             </div>
 
             <div>
-              <h4 className="mb-2 text-sm font-medium text-gray-700">Weight (kg)</h4>
+              <h4 className="mb-2 text-sm font-medium text-white">Weight (kg)</h4>
               <div className="h-40 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                    <XAxis dataKey="dateLabel" tick={{ fontSize: 11 }} stroke="#6B7280" />
-                    <YAxis domain={['auto', 'auto']} tick={{ fontSize: 11 }} stroke="#6B7280" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                    <XAxis dataKey="dateLabel" tick={{ fontSize: 11, fill: '#6b7280' }} stroke="#6b7280" />
+                    <YAxis domain={['auto', 'auto']} tick={{ fontSize: 11, fill: '#6b7280' }} stroke="#6b7280" />
                     <Tooltip content={<SecondaryTooltip unit="kg" />} />
                     <Line
                       type="monotone"

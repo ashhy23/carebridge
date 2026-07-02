@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { Navigate } from 'react-router-dom';
-import AppHeader from '../components/AppHeader';
 import ShiftCard from '../components/shifts/ShiftCard';
 import api from '../lib/api';
 import { useAuth } from '../lib/useAuth';
@@ -11,7 +10,7 @@ function ShiftSection({ title, shifts }) {
 
   return (
     <section>
-      <h3 className="mb-4 text-lg font-semibold text-gray-900">{title}</h3>
+      <h3 className="mb-4 text-lg font-semibold text-white">{title}</h3>
       <div className="space-y-4">
         {shifts.map((shift) => (
           <ShiftCard key={shift.id} shift={shift} />
@@ -43,13 +42,11 @@ export default function ShiftsPage() {
   const hasShifts = shifts.length > 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <AppHeader />
-
+    <div className="min-h-screen bg-cb-bg">
       <main className="mx-auto max-w-4xl px-6 py-10">
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-gray-900">Shifts</h2>
-          <p className="mt-1 text-gray-600">
+          <h2 className="text-3xl font-bold text-white">Shifts</h2>
+          <p className="mt-1 text-sm text-gray-400">
             {user.role === 'ADMIN'
               ? 'View all scheduled and completed care shifts.'
               : 'Your assigned care shifts.'}
@@ -57,22 +54,22 @@ export default function ShiftsPage() {
         </div>
 
         {isLoading && (
-          <div className="rounded-xl bg-white p-6 shadow-sm">
-            <p className="text-gray-600">Loading shifts...</p>
+          <div className="rounded-2xl border border-cb-border bg-cb-card p-6">
+            <p className="text-gray-500">Loading shifts...</p>
           </div>
         )}
 
         {isError && (
-          <div className="rounded-xl bg-red-50 p-6 shadow-sm">
-            <p className="text-sm text-red-700">
+          <div className="rounded-2xl border border-cb-border bg-cb-card p-6">
+            <p className="text-sm text-red-400">
               {error.response?.data?.error || 'Failed to load shifts. Please try again.'}
             </p>
           </div>
         )}
 
         {!isLoading && !isError && !hasShifts && (
-          <div className="rounded-xl bg-white p-8 text-center shadow-sm">
-            <p className="text-gray-600">No shifts assigned yet.</p>
+          <div className="rounded-2xl border border-cb-border bg-cb-card p-8 text-center">
+            <p className="text-gray-500">No shifts assigned yet.</p>
           </div>
         )}
 

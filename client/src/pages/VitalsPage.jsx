@@ -1,7 +1,6 @@
 /**
  * Vitals logging and trend charts for patients and care team viewers.
  */
-import AppHeader from '../components/AppHeader';
 import PatientProfilePicker from '../components/vitals/PatientProfilePicker';
 import VitalsChart from '../components/vitals/VitalsChart';
 import VitalsForm from '../components/vitals/VitalsForm';
@@ -12,13 +11,11 @@ export default function VitalsPage() {
   const isPatient = user.role === 'PATIENT';
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <AppHeader />
-
+    <div className="min-h-screen bg-cb-bg">
       <main className="mx-auto max-w-6xl px-6 py-10">
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-gray-900">Vitals</h2>
-          <p className="mt-1 text-gray-600">
+          <h2 className="text-3xl font-bold text-white">Vitals</h2>
+          <p className="mt-1 text-sm text-gray-400">
             {isPatient
               ? 'Log your readings and track trends over time.'
               : 'View recent vitals trends for a linked patient.'}

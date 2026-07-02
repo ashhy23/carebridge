@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../lib/api';
 
 const INPUT_CLASS =
-  'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
+  'w-full rounded-xl border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.05)] px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20';
 
 export default function TaskList({ shiftId, shiftStatus, userRole }) {
   const queryClient = useQueryClient();
@@ -73,16 +73,16 @@ export default function TaskList({ shiftId, shiftStatus, userRole }) {
 
   return (
     <div>
-      {isLoading && <p className="mt-4 text-sm text-gray-600">Loading tasks...</p>}
+      {isLoading && <p className="mt-4 text-sm text-gray-500">Loading tasks...</p>}
 
       {isError && (
-        <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="mt-4 text-sm text-red-400">
           {error.response?.data?.error || 'Failed to load tasks. Please try again.'}
         </p>
       )}
 
       {!isLoading && !isError && tasks.length === 0 && (
-        <p className="mt-4 text-sm text-gray-600">{getEmptyMessage()}</p>
+        <p className="mt-4 text-sm text-gray-500">{getEmptyMessage()}</p>
       )}
 
       {!isLoading && !isError && tasks.length > 0 && (
@@ -90,7 +90,7 @@ export default function TaskList({ shiftId, shiftStatus, userRole }) {
           {tasks.map((task) => (
             <li
               key={task.id}
-              className={`flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 ${
+              className={`flex items-start gap-3 rounded-xl border border-cb-border bg-[rgba(255,255,255,0.03)] px-4 py-3 ${
                 task.isCompleted ? 'opacity-50' : ''
               }`}
             >
@@ -99,11 +99,11 @@ export default function TaskList({ shiftId, shiftStatus, userRole }) {
                 checked={Boolean(task.isCompleted)}
                 disabled={!isCaregiver || toggleMutation.isPending}
                 onChange={() => toggleMutation.mutate(task.id)}
-                className="mt-0.5 h-4 w-4 accent-blue-600 disabled:cursor-not-allowed"
+                className="mt-0.5 h-4 w-4 accent-[#d4f53c] disabled:cursor-not-allowed"
               />
               <div className="min-w-0 flex-1">
                 <span
-                  className={`text-sm font-medium text-gray-900 ${
+                  className={`text-sm font-medium text-white ${
                     task.isCompleted ? 'line-through' : ''
                   }`}
                 >
@@ -118,7 +118,7 @@ export default function TaskList({ shiftId, shiftStatus, userRole }) {
                   type="button"
                   onClick={() => deleteMutation.mutate(task.id)}
                   disabled={deleteMutation.isPending}
-                  className="shrink-0 text-sm text-gray-400 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="shrink-0 text-sm text-gray-600 transition hover:text-red-400 disabled:cursor-not-allowed disabled:opacity-50"
                   aria-label="Delete task"
                 >
                   ✕
@@ -130,7 +130,7 @@ export default function TaskList({ shiftId, shiftStatus, userRole }) {
       )}
 
       {(addMutation.isError || toggleMutation.isError || deleteMutation.isError) && (
-        <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="mt-4 text-sm text-red-400">
           {addMutation.error?.response?.data?.error ||
             toggleMutation.error?.response?.data?.error ||
             deleteMutation.error?.response?.data?.error ||
@@ -139,7 +139,7 @@ export default function TaskList({ shiftId, shiftStatus, userRole }) {
       )}
 
       {isCaregiver && canManageTasks && (
-        <form onSubmit={handleAddTask} className="mt-6 space-y-3 border-t border-gray-100 pt-6">
+        <form onSubmit={handleAddTask} className="mt-6 space-y-3 border-t border-cb-border pt-6">
           <input
             type="text"
             value={title}
@@ -158,7 +158,7 @@ export default function TaskList({ shiftId, shiftStatus, userRole }) {
           <button
             type="submit"
             disabled={addMutation.isPending || !title.trim()}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {addMutation.isPending ? 'Adding...' : 'Add Task'}
           </button>
